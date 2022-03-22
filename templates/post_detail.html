@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Post - {{ post.title }}
+{% endblock title %}
+
+{% block content %}
+<br>
+<div class="card">
+    <div class="card-header">
+        <span class="font-weight-bold">{{ post.title|profanity }}</span> &middot; 
+        <span class="text-muted">by {{ post.author }} | {% for category in post.post_category.all %} {{ category }} {% endfor %} | {{ post.date_posted|date:"F j, Y G:i" }}</span>
+    </div>
+    <div class="card-body">
+       {{ post.text|profanity }} </div>
+    <div class="card-footer text-center text-muted">
+        <a href="{% url 'post_edit' post.pk %}">Edit</a> | <a href="{% url 'post_delete' post.pk %}">Delete</a>
+    </div>
+</div>
+<br />
+{% endblock content %}
+
+
+
