@@ -33,7 +33,7 @@ class Category(models.Model):
 
 class Post(models.Model):
 
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author')
 
     ARTICLE = 'AR'
     NEWS = 'NE'
@@ -80,7 +80,10 @@ class PostCategory(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     text_comment = models.TextField()
@@ -94,3 +97,6 @@ class Comment(models.Model):
     def dislike(self):
         self.comment_rating -= 1
         self.save()
+
+    def __str__(self):
+        return self.text_comment

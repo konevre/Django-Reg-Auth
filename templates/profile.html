@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Profile
+{% endblock title %}
+
+
+
+{% block content %}
+    <br>
+    <h1>Your Profile</h1>
+    <div>
+        <br>
+        <h5>Username: {{ user.username }}</h5>
+    </div>
+        {% if is_not_author %}
+            <h5>User group: common</h5>
+            <br>
+            <br>
+            <button type="button" class="btn btn-warning"><a style="color:black" href="{% url 'upgrade' %}">Become an Author</a></button>
+        {% else %}
+            <h5>User group: author</h5>
+        {% endif %}
+        <a class="btn btn-success" href="{% url 'profile_edit' %}">Edit</a>    
+{% endblock content %}

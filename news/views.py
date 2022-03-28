@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Post
 from .filters import PostFilter
 from django.urls import reverse_lazy
 
 
-class HomePageView(ListView):
+class PostListView(ListView):
     model = Post
-    template_name = 'home.html'
+    template_name = 'post_list.html'
     context_object_name = 'all_posts'
     ordering = '-date_posted'
     paginate_by = 3
@@ -26,27 +27,36 @@ class HomePageView(ListView):
         }
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post_detail.html'
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'post_add.html'
     fields = ['title', 'text', 'author', 'post_category', 'post_type']
+    permission_required = ('news.add_post', )
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'post_edit.html'
     fields = ['title', 'text', 'post_category', 'post_type']
+    permission_required = ('news.change_post', )
 
 
-class PostDeleteView(DeleteView):
+
+class PostDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('home')
+    permission_required = ('news.delete_post', )
+
 
 
 class PostSearchView(ListView):

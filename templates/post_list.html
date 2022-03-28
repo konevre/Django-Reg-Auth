@@ -2,7 +2,7 @@
 {% load custom_filters %}
 
 {% block title %}
-Search Results
+Home
 {% endblock title %}
 
 {% block content %}
@@ -20,16 +20,14 @@ Search Results
     </div>
     </form>
     <br>
-    {% if all_posts %}
       {% for post in all_posts %}
         <div class="card">
           <div class="card-header">
-          <span class="font-weight-bold">{{ post.title|profanity }}</span> &middot;
-          <span class="text-muted">by {{ article.author }} |
+          <span class="font-weight-bold"><a style="color:black" href="{% url 'post_detail' post.pk %}">{{ post.title|profanity }}</a></span> &middot;
+          <span class="text-muted">by {{ post.author }} |
           {{ post.date_posted|date:"d.m.Y" }}</span>
           </div>
           <div class="card-body">
-            {{ post.text|truncatewords:50|profanity }}
             <p>{{ post.text|truncatewords:50|profanity}}</p>
             <a href="{% url 'post_edit' post.pk %}">Edit</a> |
             <a href="{% url 'post_delete' post.pk %}">Delete</a>
@@ -37,18 +35,15 @@ Search Results
           <div class="card-footer">
             {% for comment in post.comments.all %}
               <p>
-                <span class="font-weight-bold"> {{ comment.user }} &middot;
+                <span class="font-weight-bold"> {{ comment.user.username }} &middot;
                 </span>
-                {{ comment }}
+                {{ comment.text_comment }}
               </p>
             {% endfor %}
           </div>
         </div>
         <br />
       {% endfor %}
-    {% else %}
-        <center><h1>Sorry, no result<h1></center>
-    {% endif %}
     {% if is_paginated %}
         <nav aria-label="Pagination">
             <hr class="my-0" />
@@ -73,4 +68,13 @@ Search Results
     {% endif %}    
 {% endblock content %}
 
-
+    {% for post in all_posts %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="small text-muted">{{ post.date_posted|date:"d.m.Y" }}</div>
+            <h2 class="card-title h4">{{ post.title|profanity }}</h2>
+            <p class="card-text"> {{ post.text|truncatewords:50|profanity }}</p>
+            <a class="btn btn-primary" href="{% url 'post_detail' post.pk %}">Read more →</a>
+        </div>
+    </div>
+    {% endfor %}

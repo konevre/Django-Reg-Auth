@@ -26,8 +26,14 @@ SECRET_KEY = 'django-insecure-^wuxeu=!(qmha+u7r7hjan&s76+q563me4t#ldfly#x$e=n7@#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Application definition
 
@@ -38,8 +44,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news',
+    'django.contrib.sites',
+    # 3rd Party
+    'crispy_forms',
     'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # Local
+    'accounts',
+    'pages',
+    'news',
+    
 ]
 
 MIDDLEWARE = [
@@ -127,3 +144,17 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+ACCOUNT_SESSION_REMEMBER = True
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_FORMS = {'signup': 'accounts.models.BasicSignupForm'}
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
