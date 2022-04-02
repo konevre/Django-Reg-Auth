@@ -19,12 +19,12 @@ Home
         </div>
     </div>
     </form>
-    <br>
+    <a class="btn btn-secondary" href="{% url 'all_categories' %}">All Categories</a>
       {% for post in all_posts %}
         <div class="card">
           <div class="card-header">
           <span class="font-weight-bold"><a style="color:black" href="{% url 'post_detail' post.pk %}">{{ post.title|profanity }}</a></span> &middot;
-          <span class="text-muted">by {{ post.author }} |
+          <span class="text-muted">by {{ post.author }} | <a href="#">{{ post.post_category.first }}</a> |
           {{ post.date_posted|date:"d.m.Y" }}</span>
           </div>
           <div class="card-body">

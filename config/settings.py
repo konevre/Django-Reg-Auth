@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
 
 SITE_ID = 1
+DEFAULT_FROM_EMAIL = '****@yandex.ru'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -52,10 +53,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
     # Local
     'accounts',
     'pages',
-    'news',
+    'news.apps.NewsConfig',
     
 ]
 
@@ -129,7 +131,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -151,10 +153,19 @@ ACCOUNT_SESSION_REMEMBER = True
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_FORMS = {'signup': 'accounts.models.BasicSignupForm'}
+
+EMAIL_HOST = 'smtp.yandex.ru' 
+EMAIL_PORT = 465 
+EMAIL_HOST_USER = '***'  
+EMAIL_HOST_PASSWORD = '***'  
+EMAIL_USE_SSL = True  
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

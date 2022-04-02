@@ -1,0 +1,23 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Category List
+{% endblock title %}
+
+{% block content %}
+      {% for category in all_categories %}
+      <br>
+        <div class="card">
+          <div class="card-header">
+            <span class="font-weight-bold">
+              <h4>{{ category.category_name }}</h4>
+                {% if category in user.category_set.all %}
+                  <a cclass="btn btn-primary" href="unsubscribe/{{ category.id }}">Unsubscribe</a>
+                {% else %}
+                  <a cclass="btn btn-primary" href="subscribe/{{ category.id }}">Subscribe</a>
+                {% endif %}
+            </span> 
+          </div>
+        </div>
+      {% endfor %}   
+{% endblock content %}

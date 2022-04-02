@@ -3,10 +3,11 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from news.models import Author
+
 
 
 
@@ -32,6 +33,7 @@ def upgrade_me(request):
     author_group = Group.objects.get(name='Authors')
     if not request.user.groups.filter(name='Authors').exists():
         author_group.user_set.add(user)
+        Author.objects.create(user=user)
     return render(request, 'upgrade_author.html')
 
 

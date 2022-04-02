@@ -9,6 +9,7 @@ django-filter = "*"
 profanity-filter2 = "*"
 django-crispy-forms = "*"
 django-allauth = "*"
+django-apscheduler = "*"
 
 [dev-packages]
 
