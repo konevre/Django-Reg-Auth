@@ -1,46 +1,24 @@
-from django.db.models.signals import post_save, m2m_changed, pre_save
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from .models import Post, Author
-from django.core.mail import send_mail
-import datetime
-from django.utils import timezone
-from django.shortcuts import redirect
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-
+from .models import Post
+from .tasks import send_notification_to_subs
 
 @receiver(m2m_changed, sender=Post.post_category.through)
 def send_email_to_subs(sender, instance, action, **kwargs):
 
     if action == 'post_add':
-        list_of_subs = []
         for category in instance.post_category.all():
+            list_of_emails = []
+
             for sub in category.subscriber.all():
-                list_of_subs.append(sub)
+                list_of_emails.append(sub.email)
 
-        for user in list_of_subs:
+            category = f'{category}'
+            new_post = f'{instance}'
+            link = f'{instance.id}'
+            send_notification_to_subs.apply_async([list_of_emails, category, new_post, link], countdown=5)
+            print('Celery applied')
 
-            html_content = render_to_string(
-                'new_post_mail.html',
-                {'category': category, 'post': instance, }
-            )
-
-            message = EmailMultiAlternatives(
-                subject=f'New post in {category.category_name}!',
-                body=f'New post',
-                from_email='****@yandex.ru',
-                to=[user.email, ],
-                )
-
-            message.attach_alternative(html_content, "text/html")
-            message.send()
-
-            # send_mail(
-            #     subject=f'New post!',
-            #     message=f'{instance.title}...',
-            #     from_email='romamaster@yandex.ru',
-            #     recipient_list=[user.email, ],
-            # )
 
 
 # @receiver(pre_save, sender=Post)

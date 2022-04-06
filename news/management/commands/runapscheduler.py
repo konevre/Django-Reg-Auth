@@ -2,11 +2,11 @@ import logging
 
 from django.core.mail import send_mail
 from django.conf import settings
-import datetime
+from datetime import datetime, timedelta
 from news.models import Category, Post
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
- 
+import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.core.management.base import BaseCommand
@@ -20,10 +20,11 @@ logger = logging.getLogger(__name__)
 # наша задача по выводу текста на экран
 def my_job():
     print('Sending weekly newsletter...')
-    today = datetime.datetime.today().weekday()
-    last_sunday = today - datetime.timedelta(days=7)
+    today = datetime.date.today()
+    last_week = today - datetime.timedelta(days=7)
+    weekday = datetime.datetime.isoweekday(datetime.datetime.now())
 
-    if today == 6:
+    if weekday == 7:
         for category in Category.objects.all():
             for sub in category.subscriber.all():
                 list_of_subs = []
@@ -31,7 +32,7 @@ def my_job():
 
                 all_posts = Post.objects.filter(
                     post_category__category_name=category,
-                    date_posted__range=(last_sunday, today)
+                    date_posted__range=(lasw_week, today)
                     )
                 for user in list_of_subs:
 
@@ -42,7 +43,7 @@ def my_job():
                     message = EmailMultiAlternatives(
                         subject='All posts for a week',
                         body=f'Weekly posts mailing',
-                        from_email='****@yandex.ru',
+                        from_email='romamaster@yandex.ru',
                         to=[user.email, ],
                         )
 

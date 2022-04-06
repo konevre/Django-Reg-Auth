@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
 
 SITE_ID = 1
-DEFAULT_FROM_EMAIL = '****@yandex.ru'
+DEFAULT_FROM_EMAIL = 'romamaster@yandex.ru'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -161,11 +161,17 @@ ACCOUNT_FORMS = {'signup': 'accounts.models.BasicSignupForm'}
 
 EMAIL_HOST = 'smtp.yandex.ru' 
 EMAIL_PORT = 465 
-EMAIL_HOST_USER = '***'  
-EMAIL_HOST_PASSWORD = '***'  
+EMAIL_HOST_USER = 'romamaster'  
+EMAIL_HOST_PASSWORD = 'October201998'  
 EMAIL_USE_SSL = True  
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
