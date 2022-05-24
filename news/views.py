@@ -12,6 +12,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.cache import cache 
 
 
 class PostListView(ListView):
@@ -37,6 +38,15 @@ class PostListView(ListView):
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post_detail.html'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 
 class PostCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):

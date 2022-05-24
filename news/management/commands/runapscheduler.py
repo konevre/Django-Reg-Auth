@@ -32,7 +32,7 @@ def my_job():
 
                 all_posts = Post.objects.filter(
                     post_category__category_name=category,
-                    date_posted__range=(lasw_week, today)
+                    date_posted__range=(last_week, today)
                     )
                 for user in list_of_subs:
 
